@@ -90,46 +90,7 @@ def _trainingLength(_x,_calc):
         
     return value
 
-def maxLength(_x):
-    #get the average for each sequence
-    list =[]
-    for _doc in _x:
-       for j in _doc:
-           list.append(len(j))
-    return np.max(list)//1
-        
-def maxSentences(_x):
-    list = []
-    for _doc in _x:
-        list.append(len(_doc))
-    return np.max(list)//1
 
-def avgLength(_x):
-    #get the average for each sequence
-    list =[]
-    for _doc in _x:
-       for j in _doc:
-           list.append(len(j))
-    return np.average(list)//1
-    
-def avgSentences(_x):
-    list = []
-    for _doc in _x:
-        list.append(len(_doc))
-    return np.average(list)//1
-
-def seq_sent_doc_lengths(x,max_sentences):
-    tmp_doc =[]
-    for i in range(len(x)):
-        tmp_s = x[i]
-        tmp_sent =[]
-        for j in range(len(tmp_s)):
-            tmp_sent.append(len(tmp_s[j]))
-        padded_zeros=np.array(np.zeros(max_sentences-len(tmp_sent)))
-        tmp_padded_doc = np.concatenate((np.array(tmp_sent) ,padded_zeros),axis=0)
-        tmp_doc.append(tmp_padded_doc)
-    return tmp_doc
-    
 def split_load_data_sentences(_x):
     # store document with sentences
     tmp_x = [] 
@@ -312,7 +273,7 @@ def next_batch(num, data, labels,seqlens,_has_seqns):
         return np.asarray(data_shuffle), np.asarray(labels_shuffle)
 
 
-def _run_document_mode(fl_name,rmv_stop_wrds,n_classes,train_base):
+def _run_document_mode(fl_name,rmv_stop_wrds,n_classes,input_base):
     # get path folder
     os.chdir(os.environ['USERPROFILE'] +'\\Downloads\\MuFiCo-master\\data')
     print('loading dataset...')
@@ -325,7 +286,7 @@ def _run_document_mode(fl_name,rmv_stop_wrds,n_classes,train_base):
     print('vocabulary size: %d' % vocab_size)
       
     # calculate max sequences in the corpus
-    _sequences = int(_trainingLength(data_x,train_base))
+    _sequences = int(_trainingLength(data_x,input_base))
     
     print('converting to sequence of integers...')
     x, y, max_sequence_length =  data_to_integer_document(data_x,data_y,vocabulary,_sequences)
